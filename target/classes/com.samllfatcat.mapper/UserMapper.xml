@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.samllfatcat.dao.BookMapper">
+    <!-- 查询操作 -->
+    <!-- resultType指定要查询的数据类型 -->
+    <!-- 在mybatis-com.samllfatcat.pojo.config.xml核心配置文件里面给com.samllfatcat.com.samllfatcat.pojo.Book起了别名 book-->
+    <select id="selectAll" resultType="book">
+        select *from books
+    </select>
+
+    <!-- 根据id进行查询 -->
+    <select id="selectById" parameterType="int" resultType="book">
+        select *from books where id = #{id}
+    </select>
+    
+    <!-- sql 语句抽取 -->
+    <sql id="selectBook">select *from books</sql> 
+    <!--  动态Sql查询  sql if -->
+    <select id="selectByCondition" parameterType="book" resultType="book">
+        <include refid="selectBook"></include>
+        <where>
+            <if test="id != 0">
+                and id = #{id}
+            </if>
+            <if test="book_name != null">
+                and book_name = #{book_name}
+            </if>
+            <if test="author != null">
+                and author = #{author}
+            </if>
+        </where>
+    </select>
+
+    <!--  动态Sql查询  sql foreach -->
+    <select id="selectByIds" parameterType="list" resultType="book">
+        <include refid="selectBook"></include>
+        <where>
+            <foreach collection="list" open="id in(" close=" )" item="id" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+    
+    <!-- 测试自定义类型处理器的 -->
+    <insert id="save" parameterType="book">
+        insert into books values (#{id},#{book_name},#{author},#{price},#{time})
+    </insert>
+
+
+</mapper>

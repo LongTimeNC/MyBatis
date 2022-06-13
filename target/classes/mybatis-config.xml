@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- MyBatis核心文件配置 -->
+<configuration>
+
+    <!--加载外部properties文件-->
+    <properties resource="jdbc.properties"></properties>
+
+    <!-- 自定义别名 注意顺序要在properties定义后面 -->
+    <typeAliases>
+        <typeAlias type="com.samllfatcat.pojo.Book" alias="book"></typeAlias>
+    </typeAliases>
+
+    <!-- 自定义类型处理器 -->
+    <typeHandlers>
+         <typeHandler handler="com.samllfatcat.handler.DateTypeHandler"></typeHandler>
+    </typeHandlers>
+
+    <!--environments环境，配置数据库连接环境信息可以配置多个environment，通过不同的default属性切换不同的environment
+        可以添加多个数据库连接信息，查询多个数据库内容-->
+    <environments default="development">
+        <environment id="development">
+            <!--JDBC：这个配置就是使用了JDBC的提交和回滚设置-->
+            <transactionManager type="JDBC"/>
+            <!--POOLED：这种数据源的实现利用池的概念将JDBC连接对象组织起来-->
+            <dataSource type="POOLED">
+                <!--数据库连接信息  连接的emp数据库-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--加载sql的映射文件-->
+    <mappers>
+        <mapper resource="com.samllfatcat.mapper/UserMapper.xml"/>
+        <!--        Mapper代理方式 包扫描的方式不再用加载sql的映射文件，可以加载多个sql映射文件，不用一个一个添加-->
+        <!--        <package name="mapper"/>-->
+    </mappers>
+
+</configuration>
